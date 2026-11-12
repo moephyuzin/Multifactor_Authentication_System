@@ -36,9 +36,9 @@ class User(db.Model):
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'moephyuzin322@gmail.com'     
-app.config['MAIL_PASSWORD'] = 'skwy gcam zuvj czlg'        
-app.config['MAIL_DEFAULT_SENDER'] = 'moephyuzin322@gmail.com' 
+app.config['MAIL_USERNAME'] = 'your-email@gmail.com'
+app.config['MAIL_PASSWORD'] = 'your-app-password'
+app.config['MAIL_DEFAULT_SENDER'] = 'your-email@gmail.com'
 mail = Mail(app)
 # Secret key must match your app secret
 s = URLSafeTimedSerializer(app.secret_key)
@@ -61,7 +61,7 @@ def signup():
         confirm_password = request.form['confirm_password']
 
         recaptcha_response = request.form.get('g-recaptcha-response')
-        secret_key = "6Ld-tjsrAAAAAANGGBhO9_P60ajqmhkj_3-f0Mgn"
+        secret_key = "your-google-recaptcha-secret-key"
         verify_url = "https://www.google.com/recaptcha/api/siteverify"
 
         payload = {'secret': secret_key, 'response': recaptcha_response}
