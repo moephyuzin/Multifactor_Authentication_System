@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+
+<div class="cardlogin">
+  <h2>Log In</h2>
+  
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="post" action="{{ url_for('login') }}" onsubmit="return checkRecaptcha(event)">
+    Email: <input type="email" name="email" required /><br />
+    Password:
+    <div style="position: relative">
+      <input type="password" id="password" name="password" required />
+      <i class="fa fa-eye-slash toggle-eye" onclick="togglePassword('password', this)"></i>
+    </div>
+    <div class="forgot-password-container">
+      <a href="{{ url_for('forgetpassword') }}">Forgot Password?</a>
+    </div>
+
+    <!-- reCAPTCHA -->
+    <div
+      class="g-recaptcha"
+      data-sitekey="6Ld-tjsrAAAAAMjxKduNix25flYTjazvZtXa661z"
+      id="recaptcha-login"
+    ></div>
+
+    <button type="submit">Log In</button>
+  </form>
+
+  <p style="margin-top: 20px; text-align: center;">
+    <strong>OR</strong>
+  </p>
+
+  <!-- QR Login Option -->
+  <div class="qr-center">
+    <a href="#" onclick="checkRecaptchaForQR(event)" title="Log in with QR Code">
+      <i
+        class="fa fa-qrcode"
+        style="font-size: 40px; color: #333; cursor: pointer"
+      ></i>
+    </a>
+  </div>
+
+  <p style="text-align: center;">Don't have an account? <a href="{{ url_for('signup') }}">Sign Up</a></p>
+</div>
+
+<style>
+  .toggle-eye {
+    position: absolute;
+    right: 10px;
+    top: 35%;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+</style>
+
+<script>
+  // Toggle password visibility
+  function togglePassword(fieldId, icon) {
+    const input = document.getElementById(fieldId);
+    const isVisible = input.type === "text";
+    input.type = isVisible ? "password" : "text";
+    icon.classList.toggle("fa-eye");
+    icon.classList.toggle("fa-eye-slash");
+  }
+
+  function checkRecaptcha(e) {
+    var response = grecaptcha.getResponse();
+    if (!response) {
+      e.preventDefault();
+      alert("Please complete reCAPTCHA before continuing.");
+      return false;
+    }
+    return true;
+  }
+
+  function checkRecaptchaForQR(e) {
+    var response = grecaptcha.getResponse();
+    if (!response) {
+      e.preventDefault();
+      alert("Please complete reCAPTCHA before continuing.");
+    } else {
+      window.location.href = "{{ url_for('qr_email') }}";
+    }
+  }
+</script>
+
+{% endblock %}

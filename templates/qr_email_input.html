@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Enter Email{% endblock %}
+{% block content %}
+
+<div class="cardqr">
+  <h2>QR Code Login</h2>
+
+  <form method="post">
+    <label for="email">Enter your registered email:</label>
+    <input type="email" name="email" id="email" required />
+    
+    {% with messages = get_flashed_messages(category_filter=["error"]) %}
+      {% if messages %}
+        <div class="alert" style="margin-top: 10px;">{{ messages[0] }}</div>
+      {% endif %}
+    {% endwith %}
+
+    <button type="submit">Continue</button>
+  </form>
+</div>
+
+<style>
+  .cardqr {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 420px;
+    padding: 30px 30px 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    justify-content: center;    
+    margin-top: -10px;
+  }
+
+  .cardqr h2 {
+    text-align: center;
+    color: #000000;
+    margin-bottom: 25px;
+  }
+
+  label {
+    display: block;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 8px;
+  }
+
+  input[type="email"] {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-size: 15px;
+    margin-bottom: 20px;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  button:hover {
+    background-color: #0056b3;
+  }
+</style>
+
+{% endblock %}

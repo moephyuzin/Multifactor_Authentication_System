@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Scan QR{% endblock %}
+{% block content %}
+
+
+<div class="cardqr">
+  <h2>Scan This QR Code with Google Authenticator</h2>
+  <img
+    src="data:image/png;base64,{{ qr_code }}"
+    alt="QR Code"
+    class="qr-image"
+  />
+
+  <form method="post" action="{{ url_for('qr_verify') }}">
+    <label for="totp_code">Enter the 6-digit code:</label>
+    <input type="text" id="totp_code" name="totp_code" maxlength="6" required />
+
+    {% with messages = get_flashed_messages(category_filter=["error"]) %}
+      {% if messages %}
+        <p class="alert" style="margin-top: 5px; margin-bottom: 5px;">{{ messages[0] }}</p>
+      {% endif %}
+    {% endwith %}
+
+    <button type="submit">Verify Code</button>
+  </form>
+</div>
+
+<style>
+  .cardqr {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 420px;
+    padding: 30px 30px 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    margin: 0 auto 50px auto;
+    text-align: center;
+  }
+
+  .cardqr h2{
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: large;
+    font-weight: 700;
+  }
+
+  .qr-image {
+    width: 200px;
+    height: 200px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: block;
+    margin: 0 auto 20px auto;
+  }
+
+  label {
+    display: block;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 8px;
+    text-align: left;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-size: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+    letter-spacing: 3px;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  button:hover {
+    background-color: #0056b3;
+  }
+</style>
+
+{% endblock %}

@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+{% block title %}Verify Email{% endblock %}
+{% block content %}
+
+<div class="cardverify">
+  <h2>Enter OTP</h2>
+
+  <!-- Success message -->
+  {% with messages = get_flashed_messages(category_filter=["success"]) %}
+    {% if messages %}
+      <div class="alert success" style="margin-bottom: 15px;">
+        {{ messages[0] }}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <form method="post">
+    <label for="otp">OTP sent to your email:</label>
+    <input type="text" id="otp" name="otp" maxlength="6" required />
+
+    <!-- Error message ABOVE the buttons -->
+    {% with messages = get_flashed_messages(category_filter=["error"]) %}
+      {% if messages %}
+        <div class="alert error" style="margin-top: 10px; margin-bottom: 20px;">
+          {{ messages[0] }}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Timer container -->
+    <div id="timer-container" style="text-align:center; margin: 15px 0;">
+      <span id="countdown">You can resend OTP in 60 seconds</span>
+    </div>
+
+    <button type="button" id="resend-otp" style="width:100%; padding:12px; background-color:#28a745; color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">
+      Resend OTP
+    </button>
+
+    <button type="submit" style="margin-top: 20px;">Verify</button>
+  </form>
+</div>
+
+<style>
+  .cardverify {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 420px;
+    padding: 30px 30px 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    margin: 50px auto;
+    text-align: center;
+  }
+
+  .cardverify h2 {
+    margin-bottom: 25px;
+    font-weight: 700;
+    color: #000000;
+  }
+
+  label {
+    display: block;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 8px;
+    text-align: left;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-size: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+    letter-spacing: 3px;
+  }
+
+  button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  button[type="submit"]:hover {
+    background-color: #0056b3;
+  }
+
+  /* Alert success style */
+  .alert.success {
+    background-color: #d4edda;
+    border: 1px solid #09a52d;
+    color: #155724;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  /* Alert error style */
+  .alert.error {
+    color: #e74c3c; /* red text */
+    background-color: #fbeaea; /* very light red/pink background */
+    border: 1px solid #c0392b; /* red border */
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-align: center;
+  }
+</style>
+
+<script>
+  const countdownElem = document.getElementById('countdown');
+  const resendBtn = document.getElementById('resend-otp');
+  const timerContainer = document.getElementById('timer-container');
+
+  // Inject remaining_time from Flask safely as integer
+  let countdownNumber = parseInt("{{ remaining_time }}", 10);
+  if (isNaN(countdownNumber) || countdownNumber < 0) countdownNumber = 60;
+
+  let countdownInterval = null;
+
+  function updateCountdownText() {
+    countdownElem.textContent = `You can resend OTP in ${countdownNumber} second${countdownNumber !== 1 ? 's' : ''}`;
+  }
+
+  function startCountdown() {
+    if (countdownNumber <= 0) {
+      // OTP expired: hide timer but DO NOT disable resend button
+      timerContainer.style.display = 'none';
+      resendBtn.disabled = false;
+      return;
+    }
+
+    timerContainer.style.display = 'block';
+    updateCountdownText();
+
+    if (countdownInterval) clearInterval(countdownInterval);
+
+    countdownInterval = setInterval(() => {
+      countdownNumber--;
+      if (countdownNumber > 0) {
+        updateCountdownText();
+      } else {
+        clearInterval(countdownInterval);
+        timerContainer.style.display = 'none';
+        resendBtn.disabled = false; // keep resend enabled always
+      }
+    }, 1000);
+  }
+
+  // On page load
+  window.addEventListener('DOMContentLoaded', () => {
+    const errorAlert = document.querySelector('.alert.error');
+    if (errorAlert && errorAlert.textContent.toLowerCase().includes('otp expired')) {
+      // Hide timer but keep resend enabled
+      timerContainer.style.display = 'none';
+      resendBtn.disabled = false;
+    } else {
+      resendBtn.disabled = false;  // keep resend enabled all the time
+      startCountdown();
+    }
+  });
+
+  resendBtn.addEventListener('click', () => {
+    resendBtn.disabled = true;
+    resendBtn.textContent = 'Resending...';
+
+    fetch('{{ url_for("resend_otp") }}', { method: 'POST' })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          showFlashMessage('OTP resent successfully. Please Check!', 'success');
+          resendBtn.textContent = 'Resend OTP';
+          countdownNumber = 60;  // reset countdown to 60 on resend
+          startCountdown();
+        } else {
+          showFlashMessage('Failed to resend OTP. Please try again later.', 'error');
+          resendBtn.disabled = false;
+          resendBtn.textContent = 'Resend OTP';
+        }
+      })
+      .catch(() => {
+        showFlashMessage('Error occurred. Please try again.', 'error');
+        resendBtn.disabled = false;
+        resendBtn.textContent = 'Resend OTP';
+      });
+  });
+
+  function showFlashMessage(message, category) {
+    const oldAlerts = document.querySelectorAll('.alert');
+    oldAlerts.forEach(alert => alert.remove());
+
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert ' + category;
+    alertDiv.style.marginTop = '10px';
+    alertDiv.textContent = message;
+
+    const form = document.querySelector('form');
+    form.insertBefore(alertDiv, form.querySelector('label'));
+
+    if (category === 'error' && message.toLowerCase().includes('otp expired')) {
+      timerContainer.style.display = 'none';
+      resendBtn.disabled = false;
+    }
+  }
+</script>
+
+{% endblock %}

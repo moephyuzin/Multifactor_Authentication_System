@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+{% block title %}Sign Up{% endblock %}
+{% block content %}
+
+<div class="cardsignup">
+  <h2>Sign Up</h2>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+       <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="post" onsubmit="return validatePasswords() && checkRecaptcha(event)">
+    User: <input type="text" name="username" required /><br />
+    Email: <input type="email" name="email" required /><br />
+
+    Password:
+    <div style="position: relative">
+      <input type="password" id="password" name="password" required />
+      <i class="fa fa-eye-slash toggle-eye" onclick="togglePassword('password', this)"></i>
+    </div>
+
+    Confirm Password:
+    <div style="position: relative">
+      <input type="password" id="confirm_password" name="confirm_password" required />
+      <i class="fa fa-eye-slash toggle-eye" onclick="togglePassword('confirm_password', this)"></i>
+    </div>
+    <p id="error-message" style="color: red; margin-top: 4px;"></p>
+
+    <div class="password-strength-container">
+      <div class="strength-bar">
+        <div id="strength-bar-fill" class="strength-bar-fill"></div>
+      </div>
+      <div id="strength-label" class="strength-label">Password strength: </div>
+      <ul id="strength-requirements" class="strength-requirements">
+        <li id="req-length" class="invalid">At least 8 characters long</li>
+        <li id="req-uppercase" class="invalid">Contains uppercase letter</li>
+        <li id="req-lowercase" class="invalid">Contains lowercase letter</li>
+        <li id="req-number" class="invalid">Contains number</li>
+        <li id="req-special" class="invalid">Contains special character</li>
+      </ul>
+    </div>
+
+    <br />
+
+    <!-- reCAPTCHA -->
+    <div
+      class="g-recaptcha"
+      data-sitekey="6Ld-tjsrAAAAAMjxKduNix25flYTjazvZtXa661z"
+    ></div>
+
+    <button type="submit">Sign Up</button>
+  </form>
+
+  <p style="text-align: center;">
+    Already have an account? <a href="{{ url_for('login') }}">Log In Here</a>
+  </p>
+</div>
+
+<style>
+  .toggle-eye {
+    position: absolute;
+    right: 10px;
+    top: 35%;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+</style>
+
+<script>
+  const passwordInput = document.getElementById("password");
+  const confirmInput = document.getElementById("confirm_password");
+  const errorMsg = document.getElementById("error-message");
+
+  // Live confirm password check
+  confirmInput.addEventListener("input", checkPasswordsMatch);
+
+  // Live password strength update + check password match
+  passwordInput.addEventListener("input", function () {
+    const password = passwordInput.value;
+    const strength = checkStrength(password);
+    updateStrengthUI(strength);
+    checkPasswordsMatch();
+  });
+
+  function checkPasswordsMatch() {
+    const password = passwordInput.value;
+    const confirmPassword = confirmInput.value;
+
+    if (confirmPassword.length === 0) {
+      errorMsg.textContent = ""; // hide message if confirm empty
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      errorMsg.textContent = "Passwords do not match!";
+    } else {
+      errorMsg.textContent = "";
+    }
+  }
+
+function validatePasswords() {
+  const password = passwordInput.value;
+  const confirmPassword = confirmInput.value;
+
+  if (password !== confirmPassword) {
+    errorMsg.textContent = "Passwords do not match!";
+    return false;
+  }
+
+  if (checkStrength(password) < 5) {  
+    alert("Password does not meet strength requirements.");
+    return false;
+  }
+
+  errorMsg.textContent = "";
+  return true;
+}
+
+
+  // Password strength check function
+  function checkStrength(password) {
+    let strength = 0;
+
+    const lengthValid = password.length >= 8;
+    const uppercaseValid = /[A-Z]/.test(password);
+    const lowercaseValid = /[a-z]/.test(password);
+    const numberValid = /[0-9]/.test(password);
+    const specialValid = /[^A-Za-z0-9]/.test(password);
+
+    updateRequirement('req-length', lengthValid);
+    updateRequirement('req-uppercase', uppercaseValid);
+    updateRequirement('req-lowercase', lowercaseValid);
+    updateRequirement('req-number', numberValid);
+    updateRequirement('req-special', specialValid);
+
+    if (lengthValid) strength++;
+    if (uppercaseValid) strength++;
+    if (lowercaseValid) strength++;
+    if (numberValid) strength++;
+    if (specialValid) strength++;
+
+    return strength;
+  }
+
+  function updateRequirement(id, isValid) {
+    const item = document.getElementById(id);
+    if (isValid) {
+      item.classList.remove('invalid');
+      item.classList.add('valid');
+    } else {
+      item.classList.remove('valid');
+      item.classList.add('invalid');
+    }
+  }
+
+  function updateStrengthUI(strength) {
+    const strengthBarFill = document.getElementById('strength-bar-fill');
+    const strengthLabel = document.getElementById('strength-label');
+
+    const strengthPercent = (strength / 5) * 100;
+    strengthBarFill.style.width = strengthPercent + '%';
+
+    let color = 'red';
+    let label = 'Very Weak';
+
+    if (strength <= 1) {
+      color = 'red';
+      label = 'Very Weak';
+    } else if (strength === 2) {
+      color = 'orange';
+      label = 'Weak';
+    } else if (strength === 3) {
+      color = '#FFC107'; // Amber
+      label = 'Moderate';
+    } else if (strength === 4) {
+      color = '#007bff'; // Blue
+      label = 'Strong';
+    } else if (strength === 5) {
+      color = '#28a745'; // Green
+      label = 'Very Strong';
+    }
+
+    strengthBarFill.style.backgroundColor = color;
+    strengthLabel.textContent = `Password strength: ${label}`;
+  }
+
+  // Toggle password visibility
+  function togglePassword(fieldId, icon) {
+    const input = document.getElementById(fieldId);
+    const isVisible = input.type === "text";
+    input.type = isVisible ? "password" : "text";
+    icon.classList.toggle("fa-eye");
+    icon.classList.toggle("fa-eye-slash");
+  }
+
+  function checkRecaptcha(e) {
+    var response = grecaptcha.getResponse();
+    if (!response) {
+      e.preventDefault();
+      alert("Please complete reCAPTCHA before continuing.");
+      return false;
+    }
+    return true;
+  }
+</script>
+
+{% endblock %}

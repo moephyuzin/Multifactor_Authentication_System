@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Welcome{% endblock %}
+{% block content %}
+
+<div class="home-container">
+  <div class="home-text">
+    <h2>Welcome to Secure Account System!</h2>
+    <p>
+      Our mission is to provide a secure and reliable platform to manage your accounts with enhanced security measures, including email verification and OTP login.
+    </p>
+    <a href="{{ url_for('signup') }}" class="btn signup-btn">Sign Up</a>
+  </div>
+
+  <div class="home-image">
+    <img src="{{ url_for('static', filename='cyber.png') }}" alt="Cyber" />
+  </div>
+</div>
+
+<style>
+  .home-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 60px); 
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    gap: 80px;
+    color: white;
+  }
+
+  .home-text {
+    flex: 1;
+    max-width: 500px;
+    text-align: left;  
+  }
+
+  .home-text h2 {
+    font-size: 3.0rem;  
+    line-height: 1.2;
+    margin-bottom: 30px;
+    font-weight: 700;
+    color: white;
+   text-align: left;
+  }
+
+  .home-text p {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    color: #cbd5e1; 
+  }
+
+  .btn.signup-btn {
+    background-color: #3bc9b0;
+    color: rgb(0, 0, 0);
+    padding: 10px 30px;
+    font-weight: bold;
+    font-size: 500;
+    border-radius: 10px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn.signup-btn:hover {
+    background-color: #3bc9b0;
+  }
+
+  .home-image {
+    flex: 1;
+    max-width: 1000px;
+  }
+
+  .home-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 50%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    object-fit: cover;
+  }
+</style>
+
+{% endblock %}

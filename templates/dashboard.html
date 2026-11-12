@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+
+<!-- Flash messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container">
+    {% for category, message in messages %}
+      <div class="alert {{ category }}">{{ message }}</div>
+    {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<div class="dashboard-wrapper">
+  <h2>Welcome, <span class="username">{{ username }}</span></h2>
+  <a href="{{ url_for('logout') }}" class="btn logout-btn">Logout</a>
+</div>
+
+<style>
+  body {
+    background-color: #003359; /* navy blue background */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    height: 100vh;            /* full viewport height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;  /* vertical & horizontal center */
+    color: white;
+  }
+
+  .flash-container {
+    width: 100%;
+    max-width: 500px;
+    margin-top: -50px;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+  
+
+  .alert {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #09a52d;
+    border-radius: 12px;
+    padding: 15px 20px;
+    font-weight: 600;
+    box-sizing: border-box;
+    display: inline-block;
+    min-width: 300px;
+  }
+
+  .dashboard-wrapper {
+    text-align: center;
+  }
+
+  .dashboard-wrapper h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  .username {
+    color: #3bc9b0;  /* bright green */
+    font-weight: 500;
+  }
+
+  .btn.logout-btn {
+    background-color: #3bc9b0;
+    color: rgb(0, 0, 0);
+    padding: 10px 30px;
+    font-weight: bold;
+    font-size: 500;
+    border-radius: 10px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn.logout-btn:hover {
+    background-color: #3bc9b0;
+  }
+</style>
+
+{% endblock %}

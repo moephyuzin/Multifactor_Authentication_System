@@ -1,0 +1,252 @@
+body {
+  font-family: Arial, sans-serif;
+  /* background: #f0f2f5; */
+    background: #003359;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding-top: 60px; /* or the height of your header */
+}
+
+
+.site-header {
+  width: 100%;
+  background-color: #333; 
+  padding: 20px 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  position: fixed; 
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.8rem;
+  color: #3bc9b0; /* bright green */
+  user-select: none;
+  padding-left: 150px; 
+}
+
+.cardsignup {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 420px;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transition: 0.3s ease;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+
+.cardlogin {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 420px;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transition: 0.3s ease;
+}
+
+
+.card:hover {
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12);
+}
+
+h2 {
+  text-align: center;
+  color: #000000;
+  margin-top: -3px;
+  margin-bottom: 25px;
+}
+
+#error-message {
+  font-size: 14px;
+  color: red;
+  margin-top: 4px;
+  min-height: 18px; /* reserve space to prevent layout jump */
+}
+
+form label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #444;
+}
+
+form input {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  font-size: 15px;
+}
+
+form button {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 20px;
+}
+
+form button:hover {
+  background-color: #0056b3;
+}
+
+p {
+  /* text-align: center; */
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Container around forgot password link */
+.forgot-password-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 15px; /* space between link and reCAPTCHA */
+}
+
+/* Style the link inside container */
+.forgot-password-container a {
+  color: black !important;
+  text-decoration: none;
+}
+
+.forgot-password-container a:hover {
+  text-decoration: underline;
+}
+
+
+/* Flash message alert style */
+.alert {
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    text-align: center;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+
+  /* Error alert */
+  .alert.alert-error {
+    color: #e74c3c; /* red text */
+    background-color: #fbeaea; /* very light red/pink background */
+    border: 1px solid #c0392b; /* red border */
+  }
+
+  /* Success alert */
+  .alert.alert-success {
+    color: #155724; /* dark green text */
+    background-color: #d4edda; /* very light green background */
+    border: 1px solid #28a745; /* green border */
+  }
+
+.password-strength-container {
+  margin-top: 8px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #555;
+  width: 100%;
+}
+
+.strength-bar {
+  height: 8px;
+  background: #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 4px;
+  position: relative;
+}
+
+.strength-bar-fill {
+  height: 100%;
+  width: 0;
+  background-color: red;
+  border-radius: 4px;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.strength-label {
+  text-align: right;
+  margin-top: 4px;
+  font-weight: bold;
+  color: #555;
+}
+
+.strength-requirements {
+  margin-top: 10px;
+  list-style: none;
+  padding-left: 0;
+}
+
+.strength-requirements li {
+  padding-left: 22px;
+  margin-bottom: 5px;
+  position: relative;
+}
+
+.strength-requirements li.valid {
+  color: green;       /* Text color when valid */
+}
+
+.strength-requirements li.invalid {
+  color: red;         /* Text color when invalid */
+}
+
+.strength-requirements li.valid::before {
+  content: "✔";
+  position: absolute;
+  left: 0;
+  color: green;
+  font-weight: bold;
+}
+
+.strength-requirements li.invalid::before {
+  content: "✖";
+  position: absolute;
+  left: 0;
+  color: red;
+  font-weight: bold;
+}
+
+.qr-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+

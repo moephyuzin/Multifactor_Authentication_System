@@ -1,0 +1,51 @@
+<!-- base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=fingerprint"
+  />
+  <!-- Font Icon -->
+  <link
+    rel="stylesheet"
+    href="../static/fonts/material-icon/css/material-design-iconic-font.min.css"
+  />
+</head>
+<body>
+  <header class="site-header">
+    <div class="logo">Secure Account System</div>
+    <div class="container">
+      
+    </div>
+  </header>
+
+  <section class="content">
+    {% block content %}{% endblock %}
+  </section>
+
+  <!-- JS -->
+  <!--passage-->
+  <script src="https://psg.so/web.js" defer></script>
+  <script type="module">
+    import "@passageidentity/passage-elements/passage-auth";
+  </script>
+
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="../static/js/script.js"></script>
+</body>
+</html>
